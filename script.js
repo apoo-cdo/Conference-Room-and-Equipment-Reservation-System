@@ -97,22 +97,24 @@ $(document).ready(function () {
     $('#footerYear').text(currentYear);
 
     // ==========================
-    // DISABLE PAST DATES
+    // DISABLE PAST DATES (Flatpickr)
     // ==========================
-    function setMinDates() {
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        const today = `${yyyy}-${mm}-${dd}`;
-        $('input[type="date"]').attr('min', today);
+    function initDatePickers() {
+        $('input[type="date"]').each(function () {
+            if (!this._flatpickr) {
+                flatpickr(this, {
+                    minDate: "today",
+                    dateFormat: "Y-m-d",
+                    disableMobile: true  // forces custom picker on mobile too
+                });
+            }
+        });
     }
 
-    setMinDates();
+    initDatePickers();
 
-    // Re-apply when modals open (important for mobile)
     $('#conferenceModal, #equipmentModal').on('shown.bs.modal', function () {
-        setMinDates();
+        initDatePickers();
     });
 
     // ==========================
