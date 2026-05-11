@@ -137,6 +137,23 @@ $(document).ready(function () {
         return obj;
     }, {});
 
+    // Validate: no past dates
+    const selectedDate = new Date(formData.date);
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate < todayDate) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Date',
+            text: 'You cannot book a past date. Please select today or a future date.',
+            confirmButtonColor: '#23a645'
+        });
+        return;
+    }
+
+    // Validate: time end must be after start
     if (formData.start >= formData.end) {
         Swal.fire({ icon: 'warning', title: 'Invalid Time Range',
         text: 'Time End must be after Time Start.', confirmButtonColor: '#23a645' });
