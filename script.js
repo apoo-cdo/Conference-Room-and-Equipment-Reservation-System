@@ -1,5 +1,6 @@
 // PUT YOUR DEPLOYED WEB APP URL HERE
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbziA9QnOPwFhLhpcT_vLz7gczuDokGmPtJJR_tAJJznqSCecjXGAxsq0vIsy950YtzhjQ/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyKQM9HvVfYpCkEK-RR6SfVyPfKrQ6MeInqeaFpTPdrvCtfjVJs58IokReRwjZ03DLQLw/exec';
+let calendarInstance = null;
 
 function gasRun(payload) {
   return fetch(GAS_URL, {
@@ -97,25 +98,10 @@ $(document).ready(function () {
     $('#footerYear').text(currentYear);
 
     // ==========================
-    // DISABLE PAST DATES (Flatpickr)
+    // DISABLE PAST DATES
     // ==========================
-    function initDatePickers() {
-        $('input[type="date"]').each(function () {
-            if (!this._flatpickr) {
-                flatpickr(this, {
-                    minDate: "today",
-                    dateFormat: "Y-m-d",
-                    disableMobile: true  // forces custom picker on mobile too
-                });
-            }
-        });
-    }
-
-    initDatePickers();
-
-    $('#conferenceModal, #equipmentModal').on('shown.bs.modal', function () {
-        initDatePickers();
-    });
+    const today = new Date().toISOString().split('T')[0];
+    $('input[type="date"]').attr('min', today);
 
     // ==========================
     // FORM SUBMISSIONS
@@ -204,8 +190,97 @@ $(document).ready(function () {
         applyRowStyling('#equipmentTable');
         applyRowStyling('#conferenceTable');
         updateDashboardCounts();
+        initCalendar(buildCalendarEvents(data));
         })
         .catch(err => console.error('Failed to load bookings:', err));
+    }
+
+    // ==========================
+    // CALENDAR VIEW
+    // ==========================
+    function initCalendar(events) {
+        const calendarEl = document.getElementById('bookingCalendar');
+
+        if (calendarInstance) {
+            calendarInstance.destroy();
+        }
+
+        calendarInstance = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            height: 'auto',
+            events: events,
+            eventClick: function(info) {
+                Swal.fire({
+                    title: info.event.title,
+                    html: `
+                        <table style="width:100%; font-size:13px; text-align:left;">
+                            <tr><td><b>Type</b></td><td>${info.event.extendedProps.type}</td></tr>
+                            <tr><td><b>Employee</b></td><td>${info.event.extendedProps.employee}</td></tr>
+                            <tr><td><b>Division</b></td><td>${info.event.extendedProps.division}</td></tr>
+                            <tr><td><b>Time</b></td><td>${info.event.extendedProps.timeStart} – ${info.event.extendedProps.timeEnd}</td></tr>
+                            <tr><td><b>Purpose</b></td><td>${info.event.extendedProps.purpose}</td></tr>
+                            <tr><td><b>Status</b></td><td>${info.event.extendedProps.status}</td></tr>
+                        </table>
+                    `,
+                    confirmButtonColor: '#23a645'
+                });
+            }
+        });
+
+        calendarInstance.render();
+    }
+
+    function buildCalendarEvents(data) {
+        const events = [];
+
+        data["Conference Room"].forEach(row => {
+            const status = $(row[8]).text().trim();
+            events.push({
+                title: '🏢 ' + row[1],
+                start: row[3].split('/').length === 3
+                    ? row[3].split('/')[2] + '-' + row[3].split('/')[0] + '-' + row[3].split('/')[1]
+                    : row[3],
+                backgroundColor: status === 'Booked' ? '#23a645' : '#dc3545',
+                borderColor: status === 'Booked' ? '#23a645' : '#dc3545',
+                extendedProps: {
+                    type: 'Conference Room',
+                    employee: row[1],
+                    division: row[2],
+                    timeStart: row[4],
+                    timeEnd: row[5],
+                    purpose: row[6],
+                    status: status
+                }
+            });
+        });
+
+        data["Equipment"].forEach(row => {
+            const status = $(row[8]).text().trim();
+            events.push({
+                title: '💻 ' + row[1],
+                start: row[3].split('/').length === 3
+                    ? row[3].split('/')[2] + '-' + row[3].split('/')[0] + '-' + row[3].split('/')[1]
+                    : row[3],
+                backgroundColor: status === 'Booked' ? '#1a6fc4' : '#fd7e14',
+                borderColor: status === 'Booked' ? '#1a6fc4' : '#fd7e14',
+                extendedProps: {
+                    type: 'Equipment',
+                    employee: row[1],
+                    division: row[2],
+                    timeStart: row[4],
+                    timeEnd: row[5],
+                    purpose: row[6],
+                    status: status
+                }
+            });
+        });
+
+        return events;
     }
 
     // ==========================
