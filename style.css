@@ -827,6 +827,18 @@ footer span {
     display: inline-block;
 }
 
+.fc-col-header-cell {
+    background: #f0f0f0 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    padding: 8px 0 !important;
+}
+
+.fc-daygrid-day-number {
+    font-size: 12px !important;
+    color: #333 !important;
+}
+
 @media (max-width: 768px) {
     .fc-toolbar {
         flex-direction: column !important;
