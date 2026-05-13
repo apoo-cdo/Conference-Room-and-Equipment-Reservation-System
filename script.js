@@ -224,14 +224,14 @@ $(document).ready(function () {
             events: events,
             eventClick: function(info) {
                 Swal.fire({
-                    title: info.event.title,
+                    title: info.event.extendedProps.employee,
                     html: `
                         <table style="width:100%; font-size:13px; text-align:left;">
                             <tr><td><b>Type</b></td><td>${info.event.extendedProps.type}</td></tr>
-                            <tr><td><b>Employee</b></td><td>${info.event.extendedProps.employee}</td></tr>
                             <tr><td><b>Division</b></td><td>${info.event.extendedProps.division}</td></tr>
                             <tr><td><b>Time</b></td><td>${info.event.extendedProps.timeStart} – ${info.event.extendedProps.timeEnd}</td></tr>
                             <tr><td><b>Purpose</b></td><td>${info.event.extendedProps.purpose}</td></tr>
+                            <tr><td><b>Remarks / Add On</b></td><td>${info.event.extendedProps.remarks || '—'}</td></tr>
                             <tr><td><b>Status</b></td><td>${info.event.extendedProps.status}</td></tr>
                         </table>
                     `,
@@ -264,7 +264,7 @@ $(document).ready(function () {
             if (!dateConverted) return;
 
             events.push({
-                title: '🏢 ' + row[1],
+                title: row[1],
                 start: dateConverted,
                 backgroundColor: status === 'Booked' ? '#23a645' : '#dc3545',
                 borderColor: status === 'Booked' ? '#23a645' : '#dc3545',
@@ -275,6 +275,7 @@ $(document).ready(function () {
                     timeStart: row[4],
                     timeEnd: row[5],
                     purpose: row[6],
+                    remarks: row[7],
                     status: status
                 }
             });
@@ -286,7 +287,7 @@ $(document).ready(function () {
             if (!dateConverted) return;
 
             events.push({
-                title: '💻 ' + row[1],
+                title: row[1],
                 start: dateConverted,
                 backgroundColor: status === 'Booked' ? '#1a6fc4' : '#fd7e14',
                 borderColor: status === 'Booked' ? '#1a6fc4' : '#fd7e14',
@@ -297,6 +298,7 @@ $(document).ready(function () {
                     timeStart: row[4],
                     timeEnd: row[5],
                     purpose: row[6],
+                    remarks: row[7],
                     status: status
                 }
             });
