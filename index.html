@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css">
   <link rel="stylesheet" href="style.css">
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -87,6 +88,10 @@
 
     <div class="menu-item" data-section="equipment">
       <i class="bi bi-laptop mr-2"></i> Equipment
+    </div>
+
+    <div class="menu-item" data-section="calendar">
+        <i class="bi bi-calendar3 mr-2"></i> Calendar
     </div>
 
     <!-- LOGOUT -->
@@ -185,6 +190,30 @@
       </div>
     </div>
 
+    <!-- CALENDAR -->
+    <div id="calendar" class="page-section">
+        <div class="content-top">
+            <h4 class="mb-0 font-weight-bold">Booking Calendar</h4>
+        </div>
+        <div class="content-body">
+            <div class="calendar-legend">
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#23a645;"></span> Conference Room (Booked)
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#dc3545;"></span> Conference Room (Cancelled)
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#1a6fc4;"></span> Equipment (Booked)
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background:#fd7e14;"></span> Equipment (Cancelled)
+                </span>
+            </div>
+            <div id="bookingCalendar"></div>
+        </div>
+    </div>
+
     <!-- CONFERENCE MODAL -->
     <div class="modal fade" id="conferenceModal">
       <div class="modal-dialog modal-dialog-centered">
@@ -210,7 +239,7 @@
               </select>
 
               <label>Inclusive Date</label>
-              <input type="date" name="date" class="form-control mb-2" required>
+              <input type="date" name="date" class="form-control mb-2" placeholder="Select Date" required>
 
               <div class="row">
 
@@ -268,7 +297,7 @@
               </select>
 
               <label>Inclusive Date</label>
-              <input type="date" name="date" class="form-control mb-2" required>
+              <input type="date" name="date" class="form-control mb-2" placeholder="Select Date" required>
 
               <div class="row">
 
@@ -312,4 +341,5 @@
 
 <!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
 <script src="script.js"></script>
