@@ -758,3 +758,92 @@ footer span {
         font-size: 15px;
     }
 }
+
+/* ===========================
+   CALENDAR
+=========================== */
+#bookingCalendar {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    margin-top: 16px;
+}
+
+.fc-event {
+    cursor: pointer;
+    font-size: 11px !important;
+    padding: 2px 4px !important;
+    border: none !important;
+}
+
+.fc-toolbar-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.fc-button {
+    background: #23a645 !important;
+    border-color: #23a645 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 12px !important;
+}
+
+.fc-button:hover {
+    background: #1c8a39 !important;
+    border-color: #1c8a39 !important;
+}
+
+.fc-button-active {
+    background: #1c8a39 !important;
+    border-color: #1c8a39 !important;
+}
+
+.fc-day-today {
+    background: #e8f5e9 !important;
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .fc-toolbar {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .fc-toolbar-title {
+        font-size: 13px !important;
+    }
+
+    .fc-button {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+    }
+
+    .calendar-legend {
+        gap: 10px;
+        font-size: 11px;
+    }
+}
