@@ -55,7 +55,7 @@ $(document).ready(function () {
     });
 
     // Load all bookings on start
-    setTimeout(loadAllBookings, 200);
+    setTimeout(loadAllBookings, 500);
 
     // ==========================
     // SIDEBAR NAVIGATION
@@ -68,6 +68,14 @@ $(document).ready(function () {
         if (section) {
             $('.page-section').removeClass('active');
             $('#' + section).addClass('active');
+
+            // Re-render calendar when switching to it
+            if (section === 'calendar' && calendarInstance) {
+                setTimeout(() => {
+                    calendarInstance.updateSize();
+                    calendarInstance.render();
+                }, 100);
+            }
         }
     });
 
@@ -236,15 +244,28 @@ $(document).ready(function () {
     }
 
     function buildCalendarEvents(data) {
+        console.log("Conference Room rows:", data["Conference Room"]);
+        console.log("Equipment rows:", data["Equipment"]);
         const events = [];
+
+        function convertDate(dateStr) {
+            // Handles "MM/dd/yyyy" → "yyyy-MM-dd"
+            if (!dateStr) return null;
+            const parts = dateStr.trim().split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
+            }
+            return dateStr; // already "yyyy-MM-dd"
+        }
 
         data["Conference Room"].forEach(row => {
             const status = $(row[8]).text().trim();
+            const dateConverted = convertDate(row[3]);
+            if (!dateConverted) return;
+
             events.push({
                 title: '🏢 ' + row[1],
-                start: row[3].split('/').length === 3
-                    ? row[3].split('/')[2] + '-' + row[3].split('/')[0] + '-' + row[3].split('/')[1]
-                    : row[3],
+                start: dateConverted,
                 backgroundColor: status === 'Booked' ? '#23a645' : '#dc3545',
                 borderColor: status === 'Booked' ? '#23a645' : '#dc3545',
                 extendedProps: {
@@ -261,11 +282,12 @@ $(document).ready(function () {
 
         data["Equipment"].forEach(row => {
             const status = $(row[8]).text().trim();
+            const dateConverted = convertDate(row[3]);
+            if (!dateConverted) return;
+
             events.push({
                 title: '💻 ' + row[1],
-                start: row[3].split('/').length === 3
-                    ? row[3].split('/')[2] + '-' + row[3].split('/')[0] + '-' + row[3].split('/')[1]
-                    : row[3],
+                start: dateConverted,
                 backgroundColor: status === 'Booked' ? '#1a6fc4' : '#fd7e14',
                 borderColor: status === 'Booked' ? '#1a6fc4' : '#fd7e14',
                 extendedProps: {
